@@ -1,0 +1,33 @@
+package com.practice.progress_peak
+
+import android.app.Application
+import androidx.room.Room
+import com.practice.progress_peak.data.ProgressPeakDatabase
+import com.practice.progress_peak.data.ProgressPeakRepository
+import com.practice.progress_peak.data.ProgressPeakRepositoryImpl
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideProgressPeakDatabase(app: Application): ProgressPeakDatabase {
+        return Room.databaseBuilder(
+            app,
+            ProgressPeakDatabase::class.java,
+            "progressPeak_db"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRepository(db: ProgressPeakDatabase): ProgressPeakRepository {
+        return ProgressPeakRepositoryImpl(db.dao)
+    }
+}
