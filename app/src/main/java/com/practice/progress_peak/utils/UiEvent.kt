@@ -6,5 +6,4 @@ import kotlinx.coroutines.flow.Flow
 sealed class UiEvent {
     object PopBack: UiEvent()
     data class Navigate(val route: String): UiEvent()
-    data class ReloadHabits(val habits: Flow<List<Habit>>): UiEvent()
 }

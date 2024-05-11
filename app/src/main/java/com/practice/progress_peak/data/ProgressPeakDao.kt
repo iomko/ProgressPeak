@@ -19,4 +19,7 @@ interface ProgressPeakDao {
 
     @Query("SELECT * FROM Habit WHERE startDate <= :date AND endDate >= :date")
     fun getHabitsByDate(date: LocalDate): Flow<List<Habit>>
+
+    @Query("SELECT * FROM habit WHERE id = :id")
+    suspend fun getHabitById(id: Int): Habit?
 }

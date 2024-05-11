@@ -19,5 +19,9 @@ class ProgressPeakRepositoryImpl(
         return dao.getHabitsByDate(date)
     }
 
+    override suspend fun getHabitById(id: Int): Habit? {
+        return dao.getHabitById(id)
+    }
+
 
 }

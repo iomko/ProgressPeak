@@ -10,13 +10,34 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.practice.progress_peak.screens.HabitConfiguration.HabitConfigurationScreen
+import com.practice.progress_peak.screens.MainHabitList.MainHabitListScreen
 import com.practice.progress_peak.ui.theme.Progress_PeakTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Progress_PeakTheme {
+                val navController = rememberNavController()
+                NavHost(navController = navController,
+                    startDestination = "main_habit_list_screen"){
+
+                    composable("main_habit_list_screen"){
+                        MainHabitListScreen(navigate = {navController.navigate(it.route)})
+                    }
+
+                    composable("habit_configuration_screen"){
+                        HabitConfigurationScreen(popBack = { navController.popBackStack() })
+                    }
+                }
+
+                /*
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -24,6 +45,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Greeting("Android")
                 }
+
+                 */
             }
         }
     }

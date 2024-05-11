@@ -12,4 +12,6 @@ interface ProgressPeakRepository {
 
     fun getHabitsByDate(date: LocalDate): Flow<List<Habit>>
 
+    suspend fun getHabitById(id: Int): Habit?
+
 }
