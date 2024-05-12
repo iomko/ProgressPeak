@@ -21,10 +21,7 @@ import androidx.compose.ui.unit.sp
 fun DropDownOption(
     columnText: String,
     currentSelectedType: String,
-    onChangeType: (String) -> Unit,
-    isExpanded: Boolean,
     onExpandedColumn: (Boolean) -> Unit,
-    options: List<String>
 ) {
     Column (
         verticalArrangement = Arrangement.Center,
@@ -42,21 +39,6 @@ fun DropDownOption(
                 .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
                 .clickable { onExpandedColumn(true) }
         ) {
-            // Dropdown content
-            DropdownMenu(
-                expanded = isExpanded,
-                onDismissRequest = { onExpandedColumn(false) }
-            ) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(option) },
-                        onClick = {
-                            onChangeType(option)
-                            onExpandedColumn(false)
-                        }
-                    )
-                }
-            }
 
             Text(
                 text = currentSelectedType,

@@ -12,12 +12,13 @@ sealed class MainHabitListEvent {
     data class PickDate (val date: LocalDate): MainHabitListEvent()
     data class ChangeHabitType(val habitType: HabitType): MainHabitListEvent()
 
-    data class ChangeSortByType(val sortByType: String): MainHabitListEvent()
+    data class ChangeSortByType(val index: Int): MainHabitListEvent()
 
-    data class ChangeCategoriesType(val categoriesType: String): MainHabitListEvent()
     data class ChangeTagsType(val tagsType: String): MainHabitListEvent()
 
     data class ExpandSortType(val expanded: Boolean): MainHabitListEvent()
-    data class ExpandCategoriesType(val expanded: Boolean): MainHabitListEvent()
     data class ExpandTagsType(val expanded: Boolean): MainHabitListEvent()
+
+    data class ExpandOrderingType(val expanded: Boolean): MainHabitListEvent()
+    data class ChangeOrderingType(val index: Int): MainHabitListEvent()
 }

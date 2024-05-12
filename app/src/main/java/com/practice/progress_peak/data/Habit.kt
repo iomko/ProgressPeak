@@ -7,10 +7,13 @@ import java.time.LocalDate
 @Entity
 data class Habit(
     val name: String,
-    val icon: Int,
-    val startDate: LocalDate = LocalDate.now(),
-    val endDate: LocalDate = LocalDate.now(),
+    val icon: String,
+    val habitType: Boolean,
+    val startDate: LocalDate? = LocalDate.now(),
+    val endDate: LocalDate? = LocalDate.now(),
     val difficulty: String,
     val completed: Boolean,
+    val unitType: String,
+    val goalAmount: Int,
     @PrimaryKey val id: Int? = null
 )

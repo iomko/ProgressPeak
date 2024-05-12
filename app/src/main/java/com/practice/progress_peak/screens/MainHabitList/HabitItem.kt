@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun HabitItem(
     name: String,
-    icon: Int,
-    completed: Boolean,
+    icon: Int = 1,
+    completed: Boolean = true,
     onEvent: (MainHabitListEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -39,11 +39,13 @@ fun HabitItem(
             modifier = Modifier.padding(16.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                /*
                 Icon(
                     painter = painterResource(id = icon),
                     contentDescription = null,
                     modifier = Modifier.size(48.dp)
                 )
+                 */
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = name,

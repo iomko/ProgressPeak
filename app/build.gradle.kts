@@ -86,9 +86,19 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
 
 
+    //material3
+    implementation("androidx.compose.material3:material3:1.2.1")
 
 
+    // Implementing the `core` module is mandatory for using other use cases.
+    implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.3.0")
+    implementation("com.maxkeppeler.sheets-compose-dialogs:calendar:1.3.0")
 
+    //LISTS
+    implementation("com.maxkeppeler.sheets-compose-dialogs:list:1.2.1")
+
+    // EMOJI
+    implementation("com.maxkeppeler.sheets-compose-dialogs:emoji:1.2.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

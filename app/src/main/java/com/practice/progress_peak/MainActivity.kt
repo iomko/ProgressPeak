@@ -1,5 +1,6 @@
 package com.practice.progress_peak
 
+import HabitConfigurationScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,10 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.practice.progress_peak.screens.HabitConfiguration.HabitConfigurationScreen
+import androidx.navigation.navArgument
 import com.practice.progress_peak.screens.MainHabitList.MainHabitListScreen
 import com.practice.progress_peak.ui.theme.Progress_PeakTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,8 +34,15 @@ class MainActivity : ComponentActivity() {
                         MainHabitListScreen(navigate = {navController.navigate(it.route)})
                     }
 
-                    composable("habit_configuration_screen"){
+                    composable("habit_configuration_screen" + "?habitId={habitId}",
+                        arguments = listOf(
+                            navArgument(name = "habitId"){
+                                type = NavType.IntType
+                                defaultValue = -1
+                            }
+                        )){
                         HabitConfigurationScreen(popBack = { navController.popBackStack() })
+
                     }
                 }
 

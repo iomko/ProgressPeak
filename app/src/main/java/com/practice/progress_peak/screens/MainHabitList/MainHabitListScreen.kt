@@ -1,23 +1,15 @@
 package com.practice.progress_peak.screens.MainHabitList
 
 import DayItem
-import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -30,10 +22,7 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,6 +43,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.maxkeppeker.sheets.core.models.base.UseCaseState
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.list.ListDialog
+import com.maxkeppeler.sheets.list.models.ListSelection
 import com.practice.progress_peak.utils.UiEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,13 +56,36 @@ fun MainHabitListScreen(
     viewModel: MainHabitListViewModel = hiltViewModel()
 )
 {
+
+    var temporarySelectedSortByTypeIndex = viewModel.currentSortTypeIndex
+
+    var temporarySelectedOrderingTypeIndex = viewModel.currentOrderingTypeIndex
+
     val context = LocalContext.current
 
-    val habits = viewModel.habits.collectAsState(initial = emptyList())
+    //val habits = viewModel.habits.collectAsState(initial = emptyList())
+
+    val habits = viewModel.habits.collectAsState().value
 
     var sortByText by remember { mutableStateOf("Sort by") }
 
     var expanded by remember { mutableStateOf(false) }
+
+    val changeSortTypeSelection: UseCaseState.() -> Unit = {
+        viewModel.onEvent(MainHabitListEvent.ChangeSortByType(temporarySelectedSortByTypeIndex))
+    }
+
+    val dismissAndCloseSortTypeSelection: UseCaseState.() -> Unit = {
+        viewModel.onEvent(MainHabitListEvent.ExpandSortType(false))
+    }
+
+    val changeOrderingTypeSelection: UseCaseState.() -> Unit = {
+        viewModel.onEvent(MainHabitListEvent.ChangeOrderingType(temporarySelectedOrderingTypeIndex))
+    }
+
+    val dismissAndCloseOrderingTypeSelection: UseCaseState.() -> Unit = {
+        viewModel.onEvent(MainHabitListEvent.ExpandOrderingType(false))
+    }
 
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect{ event ->
@@ -145,7 +161,7 @@ fun MainHabitListScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Add your icon buttons here
+
                 IconButton(onClick = { /* Handle click */ }) {
                     Icon(Icons.Default.Notifications, contentDescription = "Icon 1", tint = Color.White)
                 }
@@ -178,13 +194,13 @@ fun MainHabitListScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Row with two rounded rectangles
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = Color.LightGray)
             ) {
-                // Rounded rectangle 1 (Good Habit)
+
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -211,7 +227,6 @@ fun MainHabitListScreen(
                     )
                 }
 
-                // Rounded rectangle 2 (Bad Habit)
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -239,7 +254,7 @@ fun MainHabitListScreen(
                 }
             }
 
-            // Row with sort dropdown
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly,
@@ -248,41 +263,56 @@ fun MainHabitListScreen(
 
                 DropDownOption(
                     columnText = "Sort by",
-                    currentSelectedType = viewModel.currentSortType,
-                    onChangeType = { sortType -> viewModel.onEvent(MainHabitListEvent.ChangeSortByType(sortType)) },
-                    isExpanded = viewModel.expandedSortType,
+                    currentSelectedType = viewModel.getStringNameFromIndex(viewModel.sortListOptions,viewModel.currentSortTypeIndex),
                     onExpandedColumn = { expandSort -> viewModel.onEvent(MainHabitListEvent.ExpandSortType(expandSort)) },
-                    options = viewModel.sortListOptions
                 )
 
-                DropDownOption(
-                    columnText = "Categories",
-                    currentSelectedType = viewModel.currentCategoriesType,
-                    onChangeType = { categoryType -> viewModel.onEvent(MainHabitListEvent.ChangeCategoriesType(categoryType)) },
-                    isExpanded = viewModel.expandedCategoriesType,
-                    onExpandedColumn = { expandCategory -> viewModel.onEvent(MainHabitListEvent.ExpandCategoriesType(expandCategory)) },
-                    options = viewModel.categoriesListOptions
-                )
+                if(viewModel.expandedSortType){
+                    ListDialog(
+                        state = rememberUseCaseState(visible = true, onCloseRequest = { dismissAndCloseSortTypeSelection() }, onFinishedRequest = {
+                            changeSortTypeSelection()
+                            dismissAndCloseSortTypeSelection()
+                        }, onDismissRequest = {
+                            dismissAndCloseSortTypeSelection()
+                        }),
+                        selection = ListSelection.Single(
+                            showRadioButtons = true,
+                            options = viewModel.sortListOptions,
+                        ) { index, _ ->
+                            temporarySelectedSortByTypeIndex = index
+                        }
+                    )
+                }
 
                 DropDownOption(
-                    columnText = "Tags",
-                    currentSelectedType = viewModel.currentTagsType,
-                    onChangeType = { tagType -> viewModel.onEvent(MainHabitListEvent.ChangeTagsType(tagType)) },
-                    isExpanded = viewModel.expandedTagsType,
-                    onExpandedColumn = { expandTag -> viewModel.onEvent(MainHabitListEvent.ExpandTagsType(expandTag)) },
-                    options = viewModel.tagsListOptions
+                    columnText = "Ordering",
+                    currentSelectedType = viewModel.getStringNameFromIndex(viewModel.orderingListOptions,viewModel.currentOrderingTypeIndex),
+                    onExpandedColumn = { expandOrdering -> viewModel.onEvent(MainHabitListEvent.ExpandOrderingType(expandOrdering)) },
                 )
+
+                if(viewModel.expandedOrderingType){
+                    ListDialog(
+                        state = rememberUseCaseState(visible = true, onCloseRequest = { dismissAndCloseOrderingTypeSelection() }, onFinishedRequest = {
+                            changeOrderingTypeSelection()
+                            dismissAndCloseOrderingTypeSelection()
+                        }, onDismissRequest = { dismissAndCloseOrderingTypeSelection() }),
+                        selection = ListSelection.Single(
+                            showRadioButtons = true,
+                            options = viewModel.orderingListOptions
+                        ) { index, _ ->
+                            temporarySelectedOrderingTypeIndex = index
+                        }
+                    )
+                }
 
             }
 
             LazyColumn(
-                modifier = Modifier.weight(1f) // Occupy remaining space
+                modifier = Modifier.weight(1f)
             ) {
-                items(habits.value) { habit ->
+                items(habits) { habit ->
                     HabitItem(
                         name = habit.name,
-                        icon = habit.icon,
-                        completed = habit.completed,
                         onEvent = viewModel::onEvent,
                         modifier = Modifier
                             .fillMaxWidth()
