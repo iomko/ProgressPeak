@@ -6,7 +6,10 @@ import androidx.room.TypeConverters
 import com.practice.progress_peak.utils.Converters
 
 @Database(
-    entities = [Habit::class],
+    entities = [
+        Habit::class,
+        HabitProgression::class
+               ],
     version = 1
 )
 @TypeConverters(Converters::class)

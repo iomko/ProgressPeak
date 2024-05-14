@@ -1,5 +1,6 @@
 package com.practice.progress_peak.screens.MainHabitList
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maxkeppeler.sheets.list.models.ListOption
 import com.practice.progress_peak.data.Habit
+import com.practice.progress_peak.data.HabitProgression
 import com.practice.progress_peak.data.ProgressPeakRepository
 import com.practice.progress_peak.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -65,9 +67,8 @@ class MainHabitListViewModel @Inject constructor(
         ListOption(titleText = "Descending")
     )
 
-
-    private val _habits = MutableStateFlow<List<Habit>>(emptyList())
-    val habits: StateFlow<List<Habit>> = _habits.asStateFlow()
+    private val _habits = MutableStateFlow<List<Pair<Habit, HabitProgression>>>(emptyList())
+    val habits: StateFlow<List<Pair<Habit, HabitProgression>>> = _habits.asStateFlow()
 
     init {
         fetchData()
@@ -91,6 +92,14 @@ class MainHabitListViewModel @Inject constructor(
                     _uiEvent.send(UiEvent.Navigate("habit_configuration_screen" + "?habitId=${event.habit.id}"))
                 }
             }
+            is MainHabitListEvent.EditHabitProgress -> {
+                viewModelScope.launch {
+                    val navigationString = "habit_progress_screen" +
+                            "/?habitId=${event.habit.id}/?habitProgressId=${event.habitProgress.id}"
+
+                    _uiEvent.send(UiEvent.Navigate(navigationString))
+                }
+            }
             is MainHabitListEvent.GoToNextWeek -> {
                 viewModelScope.launch {
                     //habits = repository.getHabitsByDate(currentDate)
@@ -105,6 +114,7 @@ class MainHabitListViewModel @Inject constructor(
             }
             is MainHabitListEvent.PickDate -> {
                 viewModelScope.launch {
+
                     selectedDate = event.date
                     fetchData()
                 }
@@ -169,37 +179,39 @@ class MainHabitListViewModel @Inject constructor(
     }
 
 
-    private fun applyFiltering(listOfItems: List<Habit>): List<Habit>? {
+    private fun applyFiltering(listOfItems: List<Pair<Habit, HabitProgression>>): List<Pair<Habit, HabitProgression>> {
         return when (currentOrderingTypeIndex) {
             OrderingType.Ascending.value -> {
                 listOfItems
-                    .filter { habit ->
+                    .filter { (habit, _) ->
                         currentHabitType.value == habit.habitType
                     }
-                    .sortedWith(compareBy {
+                    .sortedBy { (habit, _) ->
                         when (currentSortTypeIndex) {
-                            SortType.Name.value -> it.name
+                            SortType.Name.value -> habit.name
                             else -> null
                         }
-                    })
+                    }
             }
             OrderingType.Descending.value -> {
                 listOfItems
-                    .filter { habit ->
+                    .filter { (habit, _) ->
                         currentHabitType.value == habit.habitType
                     }
-                    .sortedWith(compareByDescending {
+                    .sortedByDescending { (habit, _) ->
                         when (currentSortTypeIndex) {
-                            SortType.Name.value -> it.name
+                            SortType.Name.value -> habit.name
                             else -> null
                         }
-                    })
+                    }
             }
-            else -> null
+            else -> emptyList()
         }
     }
 
     private fun fetchData(){
+
+        /*
         viewModelScope.launch {
             repository.getHabitsByDate(selectedDate)
                 .map { listOfItems ->
@@ -211,6 +223,42 @@ class MainHabitListViewModel @Inject constructor(
                     }
                 }
         }
+         */
+        Log.d("CURRENTDAY", selectedDate.toString())
+
+        viewModelScope.launch {
+            repository.getHabitsByDate(selectedDate)
+                .map { listOfHabits ->
+                    listOfHabits.mapNotNull { habit ->
+                        val habitProgression = habit.id?.let { repository.getHabitDateProgress(it, selectedDate) }
+                        habitProgression?.let { habit to it }
+                    }
+                }
+                .collect { sortedList ->
+                    val filteredList = applyFiltering(sortedList)
+                    _habits.value = filteredList
+                }
+        }
+
+        /*
+        viewModelScope.launch {
+            repository.getHabitsByDate(selectedDate)
+                .map { listOfHabits ->
+                    val filteredHabits = applyFiltering(listOfHabits)
+                    listOfHabits
+                        .map { habit ->
+                            habit to habit.id?.let { repository.getHabitDateProgress(it, selectedDate) }
+                        }
+                        .map{
+                            habit -> applyFiltering(habit)
+                        }
+                }
+                .collect { sortedList ->
+                    _habits.value = sortedList
+                }
+        }
+         */
+
     }
 
 }

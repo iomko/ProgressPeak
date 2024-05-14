@@ -39,13 +39,7 @@ fun HabitItem(
             modifier = Modifier.padding(16.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                /*
-                Icon(
-                    painter = painterResource(id = icon),
-                    contentDescription = null,
-                    modifier = Modifier.size(48.dp)
-                )
-                 */
+
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = name,

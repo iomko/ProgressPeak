@@ -310,7 +310,7 @@ fun HabitConfigurationScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Button(
-                        onClick = { viewModel.onEvent(HabitConfigurationEvent.AddHabit) },
+                        onClick = { (viewModel::onEvent)(HabitConfigurationEvent.AddHabit) },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
                         modifier = Modifier
                             .weight(1f)
@@ -319,7 +319,7 @@ fun HabitConfigurationScreen(
                         Text(text = "Apply", color = Color.White)
                     }
                     Button(
-                        onClick = { /* Handle Cancel button click */ },
+                        onClick = { (viewModel::onEvent)(HabitConfigurationEvent.CancelHabit) },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                         modifier = Modifier
                             .weight(1f)
@@ -358,7 +358,7 @@ fun HabitConfigurationScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState()) // Make the content scrollable
+                .verticalScroll(rememberScrollState())
         ) {
             NameRow(viewModel.name) { newName ->
                 viewModel.onEvent(HabitConfigurationEvent.ChangeName(newName))

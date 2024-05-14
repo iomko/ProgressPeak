@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.practice.progress_peak.screens.HabitProgress.HabitProgressScreen
 import com.practice.progress_peak.screens.MainHabitList.MainHabitListScreen
 import com.practice.progress_peak.ui.theme.Progress_PeakTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,18 +45,24 @@ class MainActivity : ComponentActivity() {
                         HabitConfigurationScreen(popBack = { navController.popBackStack() })
 
                     }
+
+                    composable("habit_progress_screen" + "/?habitId={habitId}/?habitProgressId={habitProgressId}",
+                        arguments = listOf(
+                            navArgument(name = "habitId") {
+                                type = NavType.IntType
+                                defaultValue = -1
+                            },
+                            navArgument(name = "habitProgressId") {
+                                type = NavType.IntType
+                                defaultValue = -1
+                            }
+                        )
+                    ) {
+                        HabitProgressScreen(popBack = { navController.popBackStack() })
+                    }
+
                 }
 
-                /*
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
-
-                 */
             }
         }
     }

@@ -1,11 +1,13 @@
 package com.practice.progress_peak.screens.MainHabitList
 
 import com.practice.progress_peak.data.Habit
+import com.practice.progress_peak.data.HabitProgression
 import java.time.LocalDate
 
 sealed class MainHabitListEvent {
     data class DeleteHabit(val habit: Habit) : MainHabitListEvent()
     data class EditHabit(val habit: Habit) : MainHabitListEvent()
+    data class EditHabitProgress(val habit: Habit, val habitProgress: HabitProgression): MainHabitListEvent()
     object AddHabit: MainHabitListEvent()
     object GoToNextWeek: MainHabitListEvent()
     object GoToPreviousWeek: MainHabitListEvent()
