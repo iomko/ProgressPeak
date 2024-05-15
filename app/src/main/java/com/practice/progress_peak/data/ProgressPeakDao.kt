@@ -37,4 +37,7 @@ interface ProgressPeakDao {
 
     @Delete
     suspend fun deleteHabitProgress(habitProgress: HabitProgression)
+
+    @Query("SELECT * FROM Habit")
+    fun getAllHabits(): Flow<List<Habit>>
 }

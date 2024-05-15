@@ -1,6 +1,5 @@
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -28,16 +26,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,11 +52,13 @@ import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import com.maxkeppeler.sheets.emoji.EmojiDialog
 import com.maxkeppeler.sheets.emoji.models.EmojiConfig
 import com.maxkeppeler.sheets.emoji.models.EmojiSelection
+import com.maxkeppeler.sheets.list.ListDialog
+import com.maxkeppeler.sheets.list.models.ListSelection
 import com.practice.progress_peak.screens.HabitConfiguration.HabitConfigurationEvent
 import com.practice.progress_peak.screens.HabitConfiguration.HabitConfigurationViewModel
 import com.practice.progress_peak.screens.MainHabitList.HabitType
 import com.practice.progress_peak.utils.UiEvent
-
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -242,6 +239,19 @@ fun HabitConfigurationScreen(
     popBack: () -> Unit,
     viewModel: HabitConfigurationViewModel = hiltViewModel()
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val snackBarScope = rememberCoroutineScope()
+
+    var temporarySelectedUnitTypeIndex = viewModel.selectedUnitTypeIndex
+
+    val dismissAndCloseUnitTypeSelection: UseCaseState.() -> Unit = {
+        viewModel.onEvent(HabitConfigurationEvent.ExpandUnitType(false))
+    }
+
+    val changeUnitTypeSelection: UseCaseState.() -> Unit = {
+        viewModel.onEvent(HabitConfigurationEvent.ChangeUnitType(temporarySelectedUnitTypeIndex))
+    }
 
     var temporarySelectedStartDate = viewModel.selectedStartDate
 
@@ -280,12 +290,21 @@ fun HabitConfigurationScreen(
                 is UiEvent.PopBack -> {
                     popBack()
                 }
+                is UiEvent.ShowSnackbar -> {
+                    snackBarScope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = event.message,
+                            actionLabel = event.action
+                        )
+                    }
+                }
                 else -> Unit
             }
         }
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             Box(
                 modifier = Modifier
@@ -302,11 +321,11 @@ fun HabitConfigurationScreen(
             }
         },
         bottomBar = {
-            Column(){
+            Column{
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                        .padding(horizontal = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Button(
@@ -320,7 +339,7 @@ fun HabitConfigurationScreen(
                     }
                     Button(
                         onClick = { (viewModel::onEvent)(HabitConfigurationEvent.CancelHabit) },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
                         modifier = Modifier
                             .weight(1f)
                             .padding(start = 8.dp)
@@ -329,26 +348,14 @@ fun HabitConfigurationScreen(
                     }
                 }
 
-                Row(
+                Button(
+                    onClick = { (viewModel::onEvent)(HabitConfigurationEvent.DeleteHabit) },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                     modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 4.dp)
                         .fillMaxWidth()
-                        .background(color = Color(255, 165, 0)),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Add your icon buttons here
-                    IconButton(onClick = { /* Handle click */ }) {
-                        Icon(Icons.Default.Notifications, contentDescription = "Icon 1", tint = Color.White)
-                    }
-                    IconButton(onClick = { /* Handle click */ }) {
-                        Icon(Icons.Default.AccountCircle, contentDescription = "Icon 2", tint = Color.White)
-                    }
-                    IconButton(onClick = { /* Handle click */ }) {
-                        Icon(Icons.Default.Build, contentDescription = "Icon 3", tint = Color.White)
-                    }
-                    IconButton(onClick = { /* Handle click */ }) {
-                        Icon(Icons.Default.CheckCircle, contentDescription = "Icon 4", tint = Color.White)
-                    }
+                    Text(text = "Delete", color = Color.White)
                 }
             }
 
@@ -448,15 +455,30 @@ fun HabitConfigurationScreen(
 
             GoalAndUnitTypeRow(
                 goal = viewModel.selectedGoalAmount,
-                onGoalChange = { goalAmount -> (viewModel::onEvent)(HabitConfigurationEvent.ChangeGoalAmount(goalAmount)) },
-                unitType = viewModel.selectedUnitType,
+                onGoalChange = { newValue -> (viewModel::onEvent)(HabitConfigurationEvent.ChangeGoalAmount(newValue)) },
+                unitType = viewModel.getStringNameFromIndex(viewModel.unitTypeOptions,viewModel.selectedUnitTypeIndex),
                 onUnitButtonClick = { (viewModel::onEvent)(HabitConfigurationEvent.ExpandUnitType(true)) }
             )
 
+            if(viewModel.expandUnitType){
+
+                ListDialog(
+                    state = rememberUseCaseState(visible = true, onCloseRequest = dismissAndCloseUnitTypeSelection,
+                        onDismissRequest = dismissAndCloseUnitTypeSelection, onFinishedRequest = changeUnitTypeSelection),
+                    selection = ListSelection.Single(
+                        showRadioButtons = true,
+                        options = viewModel.unitTypeOptions
+                    ) { index, _ ->
+                        temporarySelectedUnitTypeIndex = index
+                    }
+                )
+            }
 
         }
     }
 }
+
+
 
 
 

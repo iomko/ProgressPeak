@@ -47,5 +47,9 @@ class ProgressPeakRepositoryImpl(
         dao.deleteHabitProgress(habitProgress)
     }
 
+    override suspend fun getAllHabits(): Flow<List<Habit>> {
+        return dao.getAllHabits()
+    }
+
 
 }

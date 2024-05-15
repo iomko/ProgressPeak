@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -66,11 +67,12 @@ fun HabitProgressTopBar(
     habitName: String
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .height(intrinsicSize = IntrinsicSize.Max),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            modifier = Modifier
+            modifier = Modifier.fillMaxHeight()
                 .weight(1f)
                 .background(color = Color(255, 165, 0))
                 .padding(vertical = 16.dp),
@@ -84,7 +86,7 @@ fun HabitProgressTopBar(
         }
 
         Box(
-            modifier = Modifier
+            modifier = Modifier.fillMaxHeight()
                 .weight(1f)
                 .background(color = Color.LightGray)
                 .padding(vertical = 16.dp),

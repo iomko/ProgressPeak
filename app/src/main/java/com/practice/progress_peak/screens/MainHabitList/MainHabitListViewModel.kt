@@ -39,7 +39,7 @@ class MainHabitListViewModel @Inject constructor(
     var currentHabitType by mutableStateOf(HabitType.Good)
         private set
 
-    var currentSortTypeIndex by mutableIntStateOf(SortType.Name.value)
+    var currentSortTypeIndex by mutableIntStateOf(0)
         private set
 
     var currentOrderingTypeIndex by mutableIntStateOf(OrderingType.Ascending.value)
@@ -48,13 +48,7 @@ class MainHabitListViewModel @Inject constructor(
     var expandedOrderingType by mutableStateOf(false)
         private set
 
-    var currentTagsType by mutableStateOf("Choice X")
-        private set
-
     var expandedSortType by mutableStateOf(false)
-        private set
-
-    var expandedTagsType by mutableStateOf(false)
         private set
 
     var sortListOptions = mutableListOf<ListOption>(
@@ -100,6 +94,13 @@ class MainHabitListViewModel @Inject constructor(
                     _uiEvent.send(UiEvent.Navigate(navigationString))
                 }
             }
+            is MainHabitListEvent.EnterStatisticsScreen -> {
+                viewModelScope.launch {
+                    val navigationString = "habit_statistics_screen"
+                    _uiEvent.send(UiEvent.Navigate(navigationString))
+                }
+            }
+
             is MainHabitListEvent.GoToNextWeek -> {
                 viewModelScope.launch {
                     //habits = repository.getHabitsByDate(currentDate)
@@ -108,7 +109,6 @@ class MainHabitListViewModel @Inject constructor(
             }
             is MainHabitListEvent.GoToPreviousWeek -> {
                 viewModelScope.launch {
-                    //habits = repository.getHabitsByDate(currentDate)
                     currentDate = currentDate.minusWeeks(1)
                 }
             }
@@ -127,25 +127,15 @@ class MainHabitListViewModel @Inject constructor(
             }
             is MainHabitListEvent.ChangeSortByType -> {
                 viewModelScope.launch {
-                    updateSelectedOption(sortListOptions ,currentSortTypeIndex, false)
+                    updateSelectedElementInListOfOptions(sortListOptions ,currentSortTypeIndex, false)
                     currentSortTypeIndex = event.index
-                    updateSelectedOption(sortListOptions, currentSortTypeIndex, true)
+                    updateSelectedElementInListOfOptions(sortListOptions, currentSortTypeIndex, true)
                     fetchData()
-                }
-            }
-            is MainHabitListEvent.ChangeTagsType -> {
-                viewModelScope.launch {
-                    currentTagsType = event.tagsType
                 }
             }
             is MainHabitListEvent.ExpandSortType -> {
                 viewModelScope.launch {
                     expandedSortType = event.expanded
-                }
-            }
-            is MainHabitListEvent.ExpandTagsType -> {
-                viewModelScope.launch {
-                    expandedTagsType = event.expanded
                 }
             }
             is MainHabitListEvent.ExpandOrderingType -> {
@@ -155,9 +145,9 @@ class MainHabitListViewModel @Inject constructor(
             }
             is MainHabitListEvent.ChangeOrderingType -> {
                 viewModelScope.launch {
-                    updateSelectedOption(orderingListOptions ,currentOrderingTypeIndex, false)
+                    updateSelectedElementInListOfOptions(orderingListOptions ,currentOrderingTypeIndex, false)
                     currentOrderingTypeIndex = event.index
-                    updateSelectedOption(orderingListOptions, currentOrderingTypeIndex, true)
+                    updateSelectedElementInListOfOptions(orderingListOptions, currentOrderingTypeIndex, true)
                     fetchData()
                 }
             }
@@ -166,12 +156,12 @@ class MainHabitListViewModel @Inject constructor(
         }
     }
 
-    fun getStringNameFromIndex(list: MutableList<ListOption>, index: Int): String {
+    fun getStringNameFromListOfOptions(list: MutableList<ListOption>, index: Int): String {
         require(index in list.indices) { "Index out of bounds" }
         return list[index].titleText
     }
 
-    private fun updateSelectedOption(list: MutableList<ListOption>,index: Int, isSelected: Boolean) {
+    private fun updateSelectedElementInListOfOptions(list: MutableList<ListOption>, index: Int, isSelected: Boolean) {
         require(index in list.indices) { "Index out of bounds" }
         val optionToUpdate = list[index]
         val updatedOption = optionToUpdate.copy(selected = isSelected)
@@ -183,11 +173,12 @@ class MainHabitListViewModel @Inject constructor(
         return when (currentOrderingTypeIndex) {
             OrderingType.Ascending.value -> {
                 listOfItems
-                    .filter { (habit, _) ->
+                    .filter { (habit, habitProgress) ->
                         currentHabitType.value == habit.habitType
                     }
-                    .sortedBy { (habit, _) ->
+                    .sortedBy { (habit, habitProgress) ->
                         when (currentSortTypeIndex) {
+                            SortType.Completion.value -> habitProgress.progressToDate.toString()
                             SortType.Name.value -> habit.name
                             else -> null
                         }
@@ -195,11 +186,12 @@ class MainHabitListViewModel @Inject constructor(
             }
             OrderingType.Descending.value -> {
                 listOfItems
-                    .filter { (habit, _) ->
+                    .filter { (habit, habitProgress) ->
                         currentHabitType.value == habit.habitType
                     }
-                    .sortedByDescending { (habit, _) ->
+                    .sortedByDescending { (habit, habitProgress) ->
                         when (currentSortTypeIndex) {
+                            SortType.Completion.value -> habitProgress.progressToDate.toString()
                             SortType.Name.value -> habit.name
                             else -> null
                         }
@@ -276,4 +268,5 @@ enum class OrderingType(var value: Int) {
 
 enum class SortType(var value: Int){
     Name(0),
+    Completion(1)
 }

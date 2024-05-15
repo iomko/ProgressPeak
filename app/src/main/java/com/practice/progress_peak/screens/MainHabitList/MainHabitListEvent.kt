@@ -23,4 +23,6 @@ sealed class MainHabitListEvent {
 
     data class ExpandOrderingType(val expanded: Boolean): MainHabitListEvent()
     data class ChangeOrderingType(val index: Int): MainHabitListEvent()
+
+    object EnterStatisticsScreen: MainHabitListEvent()
 }

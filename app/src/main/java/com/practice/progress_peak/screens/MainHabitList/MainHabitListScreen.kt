@@ -19,13 +19,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -170,17 +168,11 @@ fun MainHabitListScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                IconButton(onClick = { /* Handle click */ }) {
-                    Icon(Icons.Default.Notifications, contentDescription = "Icon 1", tint = Color.White)
+                IconButton(onClick = {}) {
+                    Icon(Icons.Default.Home, contentDescription = "", tint = Color.White)
                 }
-                IconButton(onClick = { /* Handle click */ }) {
-                    Icon(Icons.Default.AccountCircle, contentDescription = "Icon 2", tint = Color.White)
-                }
-                IconButton(onClick = { /* Handle click */ }) {
-                    Icon(Icons.Default.Build, contentDescription = "Icon 3", tint = Color.White)
-                }
-                IconButton(onClick = { /* Handle click */ }) {
-                    Icon(Icons.Default.CheckCircle, contentDescription = "Icon 4", tint = Color.White)
+                IconButton(onClick = { (viewModel::onEvent)(MainHabitListEvent.EnterStatisticsScreen) }) {
+                    Icon(Icons.Default.Info, contentDescription = "", tint = Color.White)
                 }
             }
         },
@@ -271,7 +263,7 @@ fun MainHabitListScreen(
 
                 DropDownOption(
                     columnText = "Sort by",
-                    currentSelectedType = viewModel.getStringNameFromIndex(viewModel.sortListOptions,viewModel.currentSortTypeIndex),
+                    currentSelectedType = viewModel.getStringNameFromListOfOptions(viewModel.sortListOptions,viewModel.currentSortTypeIndex),
                     onExpandedColumn = { expandSort -> viewModel.onEvent(MainHabitListEvent.ExpandSortType(expandSort)) },
                 )
 
@@ -294,7 +286,7 @@ fun MainHabitListScreen(
 
                 DropDownOption(
                     columnText = "Ordering",
-                    currentSelectedType = viewModel.getStringNameFromIndex(viewModel.orderingListOptions,viewModel.currentOrderingTypeIndex),
+                    currentSelectedType = viewModel.getStringNameFromListOfOptions(viewModel.orderingListOptions,viewModel.currentOrderingTypeIndex),
                     onExpandedColumn = { expandOrdering -> viewModel.onEvent(MainHabitListEvent.ExpandOrderingType(expandOrdering)) },
                 )
 
@@ -325,30 +317,6 @@ fun MainHabitListScreen(
                     )
                 }
             }
-            /*
-            LazyColumn(
-                modifier = Modifier.weight(1f)
-            ) {
-                items(habits) { habit ->
-                    HabitItem(
-                        name = habit.first.name,
-                        onEvent = viewModel::onEvent,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                //(viewModel::onEvent)(MainHabitListEvent.AddHabit)
-                                habit.second?.let {
-                                    MainHabitListEvent.EditHabitProgress(habit.first,
-                                        it
-                                    )
-                                }?.let { (viewModel::onEvent)(it) }
-
-                            }
-                            .padding(16.dp)
-                    )
-                }
-            }
-             */
         }
     }
 
@@ -392,7 +360,7 @@ fun CustomHabitItem(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color.LightGray)
             .clickable { onHabitClick() }

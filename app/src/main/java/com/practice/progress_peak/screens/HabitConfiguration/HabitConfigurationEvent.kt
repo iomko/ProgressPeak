@@ -23,9 +23,11 @@ sealed class HabitConfigurationEvent {
 
     object CancelHabit: HabitConfigurationEvent()
 
+    object DeleteHabit: HabitConfigurationEvent()
+
     data class ChangeGoalAmount(val amount: Int): HabitConfigurationEvent()
 
-    data class ChangeUnitType(val type: String): HabitConfigurationEvent()
+    data class ChangeUnitType(val index: Int): HabitConfigurationEvent()
 
     data class ExpandUnitType(val expanded: Boolean): HabitConfigurationEvent()
 

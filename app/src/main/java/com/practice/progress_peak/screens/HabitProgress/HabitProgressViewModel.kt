@@ -1,5 +1,6 @@
 package com.practice.progress_peak.screens.HabitProgress
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -85,9 +86,11 @@ class HabitProgressViewModel @Inject constructor (
                 }
             }
             is HabitProgressEvent.ApplyInput -> {
+                Log.d("YES APPLIED", currentInputAmount.toString())
+
                 viewModelScope.launch {
 
-                    //najskor ale musime pozriet ze ci je pridana minusova hodnota
+
                     if (currentOperation == Operation.Subtracting) {
 
                         if (currentInputAmount <= habitProgressionAmount) {
@@ -117,11 +120,11 @@ class HabitProgressViewModel @Inject constructor (
 
                                                 repository.insertHabitProgression(
                                                     HabitProgression(
-                                                        date = habitProgress?.date,
-                                                        progressToDate = habitProgress?.progressToDate!! - currentInputAmount,
+                                                        date = nextHabitProgress?.date,
+                                                        progressToDate = nextHabitProgress.progressToDate - currentInputAmount,
                                                         habitId = this@HabitProgressViewModel.habit?.id,
-                                                        id = habitProgress?.id,
-                                                        progressThisDate = habitProgress?.progressThisDate!! - currentInputAmount
+                                                        id = nextHabitProgress.id,
+                                                        progressThisDate = nextHabitProgress.progressThisDate - currentInputAmount
                                                     )
                                                 )
                                             } else {
@@ -159,11 +162,11 @@ class HabitProgressViewModel @Inject constructor (
 
                                             repository.insertHabitProgression(
                                                 HabitProgression(
-                                                    date = habitProgress?.date,
-                                                    progressToDate = habitProgress?.progressToDate!! - currentInputAmount,
+                                                    date = nextHabitProgress.date,
+                                                    progressToDate = nextHabitProgress.progressToDate - currentInputAmount,
                                                     habitId = this@HabitProgressViewModel.habit?.id,
-                                                    id = habitProgress?.id,
-                                                    progressThisDate = habitProgress?.progressThisDate!! - currentInputAmount
+                                                    id = nextHabitProgress.id,
+                                                    progressThisDate = nextHabitProgress.progressThisDate - currentInputAmount
                                                 )
                                             )
                                         } else {
@@ -204,11 +207,11 @@ class HabitProgressViewModel @Inject constructor (
 
                                     repository.insertHabitProgression(
                                         HabitProgression(
-                                            date = habitProgress?.date,
-                                            progressToDate = habitProgress?.progressToDate!! + currentInputAmount,
+                                            date = nextHabitProgress.date,
+                                            progressToDate = (nextHabitProgress.progressToDate + currentInputAmount),
                                             habitId = this@HabitProgressViewModel.habit?.id,
-                                            id = habitProgress?.id,
-                                            progressThisDate = habitProgress?.progressThisDate!! + currentInputAmount
+                                            id = nextHabitProgress.id,
+                                            progressThisDate = nextHabitProgress.progressThisDate + currentInputAmount
                                         )
                                     )
 

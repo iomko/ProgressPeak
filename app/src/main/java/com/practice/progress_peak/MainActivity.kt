@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.practice.progress_peak.screens.HabitProgress.HabitProgressScreen
+import com.practice.progress_peak.screens.HabitStatistics.HabitStatisticsScreen
 import com.practice.progress_peak.screens.MainHabitList.MainHabitListScreen
 import com.practice.progress_peak.ui.theme.Progress_PeakTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +60,10 @@ class MainActivity : ComponentActivity() {
                         )
                     ) {
                         HabitProgressScreen(popBack = { navController.popBackStack() })
+                    }
+
+                    composable("habit_statistics_screen"){
+                        HabitStatisticsScreen(navigate = {navController.navigate(it.route)})
                     }
 
                 }

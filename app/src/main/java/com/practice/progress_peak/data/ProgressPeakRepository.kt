@@ -26,4 +26,6 @@ interface ProgressPeakRepository {
 
     suspend fun deleteHabitProgress(habitProgress: HabitProgression)
 
+    suspend fun getAllHabits(): Flow<List<Habit>>
+
 }
