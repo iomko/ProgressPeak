@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Progress_Peak</string>
+
+    //MainScreenStrings
+    <string name="good_habits">Good Habits</string>
+    <string name="bad_habits">Good Habits</string>
+    <string name="filter_sorting">Sort by</string>
+    <string name="filter_ordering">Ordering</string>
+    stringResource(R.string.sort_by)
+
 </resources>

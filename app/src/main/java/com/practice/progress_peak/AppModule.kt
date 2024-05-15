@@ -2,9 +2,9 @@ package com.practice.progress_peak
 
 import android.app.Application
 import androidx.room.Room
-import com.practice.progress_peak.data.ProgressPeakDatabase
-import com.practice.progress_peak.data.ProgressPeakRepository
-import com.practice.progress_peak.data.ProgressPeakRepositoryImpl
+import com.practice.progress_peak.data.Database.RoomDatabase.ProgressPeakDatabase
+import com.practice.progress_peak.data.Database.Dao.ProgressPeakRepository
+import com.practice.progress_peak.data.Database.Dao.ProgressPeakRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
