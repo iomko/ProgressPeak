@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,13 +24,13 @@ import androidx.compose.ui.unit.sp
 import com.practice.progress_peak.R
 
 @Composable
-fun HabitStatisticsBoxInfo(icon: ImageVector, textLeft: String, textRight: String) {
+fun HabitStatisticsBoxInfo(icon: ImageVector, textRight: String, textBottom: String) {
     Box(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.LightGray)
+            .background(colorResource(R.color.light_gray))
     ) {
         Column(
             modifier = Modifier.padding(8.dp)
@@ -47,14 +46,14 @@ fun HabitStatisticsBoxInfo(icon: ImageVector, textLeft: String, textRight: Strin
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = textLeft,
+                    text = textRight,
                     modifier = Modifier.padding(start = 8.dp, end = 8.dp),
                     fontWeight = FontWeight.Bold,
                     color = colorResource(R.color.black)
                 )
             }
             Text(
-                text = textRight,
+                text = textBottom,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier

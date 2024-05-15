@@ -17,9 +17,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.practice.progress_peak.R
 
 @Composable
 fun HabitStatisticsTopBar(
@@ -34,18 +36,12 @@ fun HabitStatisticsTopBar(
     ) {
         Box(
             modifier = Modifier.weight(1f).fillMaxHeight()
-                .background(
-                    Color(
-                    255,
-                    165,
-                    0
-                )
-                ),
+                .background(colorResource(R.color.orange)),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Statistics",
-                color = Color.Black,
+                text = stringResource(R.string.statistics_screen_bar),
+                color = colorResource(R.color.black),
                 modifier = Modifier.padding(horizontal = 16.dp),
                 textAlign = TextAlign.Center
             )
@@ -53,13 +49,13 @@ fun HabitStatisticsTopBar(
 
         Box(
             modifier = Modifier.weight(1f).fillMaxHeight()
-                .background(Color.LightGray),
+                .background(colorResource(R.color.light_gray)),
             contentAlignment = Alignment.Center
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = habitName,
-                    color = Color.Black,
+                    color = colorResource(R.color.black),
                     modifier = Modifier.padding(horizontal = 16.dp).weight(1f),
                 )
                 IconButton(

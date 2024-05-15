@@ -12,13 +12,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maxkeppeler.sheets.list.models.ListOption
+import com.practice.progress_peak.R
 import com.practice.progress_peak.data.Database.DatabaseTables.Habit
 import com.practice.progress_peak.data.Database.Dao.ProgressPeakRepository
 import com.practice.progress_peak.screens.HabitStatistics.OtherComponents.activeDaysCount
 import com.practice.progress_peak.screens.HabitStatistics.OtherComponents.averageDayProgress
 import com.practice.progress_peak.screens.HabitStatistics.OtherComponents.maximumDayProgress
 import com.practice.progress_peak.screens.HabitStatistics.OtherComponents.totalProgressCount
-import com.practice.progress_peak.utils.Routes
+import com.practice.progress_peak.utils.FunctionExtensions.formatCount
+import com.practice.progress_peak.utils.StringResourcesProvider
 import com.practice.progress_peak.utils.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -29,8 +31,11 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+//Spôsob vytvárania ViewModelov som robil na základe
+//tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ&t=3102s
 @HiltViewModel
 class HabitStatisticsViewModel @Inject constructor (
+    private val stringResourcesProvider: StringResourcesProvider,
     private val repository: ProgressPeakRepository
 ): ViewModel() {
 
@@ -55,18 +60,27 @@ class HabitStatisticsViewModel @Inject constructor (
     var selectedHabitIndex by mutableIntStateOf(0)
         private set
 
+    var habitsEmpty by mutableStateOf(true)
+        private set
+
     init {
         viewModelScope.launch {
             repository.getAllHabits().collect { habitsList ->
                 _habits.value = habitsList
 
                 if (habits.value.isNotEmpty()) {
+                    habitsEmpty = false
                     val firstHabitInList = habits.value[0]
+
                     statisticsBoxes = listOf(
-                        StatisticsBox(Icons.Default.Favorite, averageDayProgress(firstHabitInList, repository), "Daily Average Progress"),
-                        StatisticsBox(Icons.Default.Share, maximumDayProgress(firstHabitInList, repository), "Maximum Progress in Day"),
-                        StatisticsBox(Icons.Default.Settings, activeDaysCount(firstHabitInList, repository), "Active Days Count"),
-                        StatisticsBox(Icons.Default.Settings, totalProgressCount(firstHabitInList, repository), "Total Progress")
+                        StatisticsBox(Icons.Default.Favorite, averageDayProgress(firstHabitInList, repository).formatCount()
+                                + " " + firstHabitInList.unitType, stringResourcesProvider.getString(R.string.average_day_progress_bar)),
+                        StatisticsBox(Icons.Default.Share, maximumDayProgress(firstHabitInList, repository).formatCount()
+                                + " " + firstHabitInList.unitType, stringResourcesProvider.getString(R.string.maximum_progress_bar)),
+                        StatisticsBox(Icons.Default.Settings, activeDaysCount(firstHabitInList, repository).formatCount()
+                                + " " + firstHabitInList.unitType, stringResourcesProvider.getString(R.string.active_days_bar)),
+                        StatisticsBox(Icons.Default.Settings, totalProgressCount(firstHabitInList, repository).formatCount()
+                                + " " + firstHabitInList.unitType, stringResourcesProvider.getString(R.string.total_progress_bar))
                     )
                     this@HabitStatisticsViewModel.name = firstHabitInList.name
 
@@ -75,6 +89,8 @@ class HabitStatisticsViewModel @Inject constructor (
                     }
 
                     updateSelectedOption(habitNamesList, 0, true)
+                } else {
+                    habitsEmpty = true
                 }
             }
         }
@@ -102,18 +118,21 @@ class HabitStatisticsViewModel @Inject constructor (
                     val currentSelectedHabit = habits.value[selectedHabitIndex]
 
                     statisticsBoxes = listOf(
-                        StatisticsBox(Icons.Default.Favorite, averageDayProgress(currentSelectedHabit, repository), "Daily Average Progress"),
-                        StatisticsBox(Icons.Default.Share, maximumDayProgress(currentSelectedHabit, repository), "Maximum Progress in Day"),
-                        StatisticsBox(Icons.Default.Settings, activeDaysCount(currentSelectedHabit, repository), "Active Days Count"),
-                        StatisticsBox(Icons.Default.Settings, totalProgressCount(currentSelectedHabit, repository), "Total Progress")
+                        StatisticsBox(Icons.Default.Favorite, averageDayProgress(currentSelectedHabit, repository).formatCount()
+                                + " " + currentSelectedHabit.unitType, stringResourcesProvider.getString(R.string.average_day_progress_bar)),
+                        StatisticsBox(Icons.Default.Share, maximumDayProgress(currentSelectedHabit, repository).formatCount()
+                                + " " + currentSelectedHabit.unitType, stringResourcesProvider.getString(R.string.maximum_progress_bar)),
+                        StatisticsBox(Icons.Default.Settings, activeDaysCount(currentSelectedHabit, repository).formatCount()
+                                + " " + currentSelectedHabit.unitType, stringResourcesProvider.getString(R.string.active_days_bar)),
+                        StatisticsBox(Icons.Default.Settings, totalProgressCount(currentSelectedHabit, repository).formatCount()
+                                + " " + currentSelectedHabit.unitType, stringResourcesProvider.getString(R.string.total_progress_bar))
                     )
                     this@HabitStatisticsViewModel.name = currentSelectedHabit.name
                 }
             }
             is HabitStatisticsEvent.EnterMainHabitListScreen -> {
                 viewModelScope.launch {
-                    val navigationString = Routes.MAIN_SCREEN
-                    _uiEvent.send(UiEvent.Navigate(navigationString))
+                    _uiEvent.send(UiEvent.PopBack)
                 }
             }
             else-> Unit
@@ -123,6 +142,6 @@ class HabitStatisticsViewModel @Inject constructor (
 
 class StatisticsBox(
     var icon: ImageVector,
-    var count: Number,
+    var countWithType: String,
     var text: String
 )

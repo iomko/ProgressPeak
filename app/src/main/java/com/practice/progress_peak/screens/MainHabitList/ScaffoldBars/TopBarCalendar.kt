@@ -20,10 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.practice.progress_peak.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -40,7 +41,7 @@ fun TopBarCalendar(currentDate: LocalDate,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.DarkGray)
+                .background(colorResource(R.color.dark_gray))
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -51,7 +52,7 @@ fun TopBarCalendar(currentDate: LocalDate,
                 Text(
                     text = "${currentDate.year}-${currentDate.month}",
                     style = TextStyle(fontSize = 18.sp),
-                    color = Color.White
+                    color = colorResource(R.color.white)
                 )
             }
             Row(
@@ -63,7 +64,7 @@ fun TopBarCalendar(currentDate: LocalDate,
                 IconButton(onClick = {
                     onClickPreviousWeek()
                 }) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = "Previous Week", tint = Color.White)
+                    Icon(Icons.Default.ArrowBack, contentDescription = "", tint = colorResource(R.color.white))
                 }
                 LazyRow {
 
@@ -81,7 +82,7 @@ fun TopBarCalendar(currentDate: LocalDate,
                 IconButton(onClick = {
                     onClickNextWeek()
                 }) {
-                    Icon(Icons.Default.ArrowForward, contentDescription = "Next Week", tint = Color.White)
+                    Icon(Icons.Default.ArrowForward, contentDescription = "", tint = colorResource(R.color.white))
                 }
             }
         }
@@ -91,7 +92,7 @@ fun TopBarCalendar(currentDate: LocalDate,
 
 @Composable
 fun DayItem(day: LocalDate, isSelected: Boolean, onClick: () -> Unit) {
-    val backgroundColor = if (isSelected) Color(255, 165, 0) else Color.Transparent
+    val backgroundColor = if (isSelected) colorResource(R.color.orange) else colorResource(R.color.transparent)
 
     Box(
         modifier = Modifier
@@ -106,8 +107,8 @@ fun DayItem(day: LocalDate, isSelected: Boolean, onClick: () -> Unit) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(day.format(DateTimeFormatter.ofPattern("E")), color = Color.White)
-            Text(day.dayOfMonth.toString(), color = Color.White)
+            Text(day.format(DateTimeFormatter.ofPattern("E")), color = colorResource(R.color.white))
+            Text(day.dayOfMonth.toString(), color = colorResource(R.color.white))
         }
     }
 }

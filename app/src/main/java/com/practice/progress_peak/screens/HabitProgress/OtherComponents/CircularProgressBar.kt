@@ -8,21 +8,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.practice.progress_peak.R
 
 @Composable
 fun CircularProgressBar(
     modifier: Modifier = Modifier,
     maxValue: Int,
     currentAmount: Int,
-    progressColor: Color = Color.Green,
-    outlineColor: Color = Color.LightGray,
+    progressColor: Color = colorResource(R.color.green),
+    outlineColor: Color = colorResource(R.color.light_gray),
     strokeWidth: Dp = 8.dp,
     size: Dp = 100.dp,
     textSize: Float = 14f
@@ -34,11 +35,9 @@ fun CircularProgressBar(
         modifier = modifier.size(size),
         contentAlignment = Alignment.Center
     ) {
-        // Draw light gray circular outline
+
         Canvas(modifier = Modifier.matchParentSize()) {
-            val innerRadius = size.toPx() / 2 - strokeWidth.toPx() / 2
-            val outerRadius = size.toPx() / 2 + strokeWidth.toPx() / 2
-            val center = Offset(size.toPx() / 2, size.toPx() / 2)
+
 
             drawCircle(
                 color = outlineColor,
@@ -47,11 +46,9 @@ fun CircularProgressBar(
             )
         }
 
-        // Draw progress arc
+
         Canvas(modifier = Modifier.matchParentSize()) {
-            val innerRadius = size.toPx() / 2 - strokeWidth.toPx() / 2
-            val outerRadius = size.toPx() / 2 + strokeWidth.toPx() / 2
-            val center = Offset(size.toPx() / 2, size.toPx() / 2)
+
 
             drawArc(
                 color = progressColor,
@@ -62,7 +59,7 @@ fun CircularProgressBar(
             )
         }
 
-        // Display text in the center
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -74,7 +71,7 @@ fun CircularProgressBar(
             Text(
                 text = "$currentAmount/$maxValue",
                 textAlign = TextAlign.Center,
-                fontSize = textSize.sp // Use sp extension property
+                fontSize = textSize.sp
             )
         }
     }

@@ -34,6 +34,8 @@ import com.practice.progress_peak.screens.MainHabitList.ScaffoldBars.TopBarCalen
 import com.practice.progress_peak.utils.UiEvent
 import com.practice.progress_peak.utils.getStringNameFromListOfOptions
 
+//Spôsob inicializácie okien pomocou Dagger Hilt dependency injection knižnice som robil na základe
+//tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ&t=3102s
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainHabitListScreen(

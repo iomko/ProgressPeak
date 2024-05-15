@@ -5,6 +5,8 @@ import com.practice.progress_peak.data.Database.DatabaseTables.HabitProgression
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
+//Nápad pre vytvorenie konkrétnej implementácie repozitára bolo navrhnuté za pomoci
+//video tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ
 class ProgressPeakRepositoryImpl(
     private val dao: ProgressPeakDao
 ) : ProgressPeakRepository {

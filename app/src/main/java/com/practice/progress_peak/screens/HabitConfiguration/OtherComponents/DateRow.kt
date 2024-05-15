@@ -8,8 +8,9 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import com.practice.progress_peak.R
 
 @Composable
 fun DateRow(
@@ -23,7 +24,7 @@ fun DateRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp),
-            border = BorderStroke(2.dp, Color(255, 165, 0)),
+            border = BorderStroke(2.dp, colorResource(R.color.orange)),
             shape = RoundedCornerShape(16.dp)
         ) {
             Text(text = buttonText)

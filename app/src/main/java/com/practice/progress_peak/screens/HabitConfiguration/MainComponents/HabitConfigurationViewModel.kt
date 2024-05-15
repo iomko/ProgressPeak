@@ -8,10 +8,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maxkeppeler.sheets.list.models.ListOption
+import com.practice.progress_peak.R
 import com.practice.progress_peak.data.Database.DatabaseTables.Habit
 import com.practice.progress_peak.data.Database.DatabaseTables.HabitProgression
 import com.practice.progress_peak.data.Database.Dao.ProgressPeakRepository
 import com.practice.progress_peak.screens.MainHabitList.MainComponents.HabitType
+import com.practice.progress_peak.utils.StringResourcesProvider
 import com.practice.progress_peak.utils.UiEvent
 import com.practice.progress_peak.utils.updateSelectedElementInListOfOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,9 +23,11 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
-
+//Spôsob vytvárania ViewModelov som robil na základe
+//tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ&t=3102s
 @HiltViewModel
 class HabitConfigurationViewModel @Inject constructor (
+    private val stringResourcesProvider: StringResourcesProvider,
     private val repository: ProgressPeakRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
@@ -34,10 +38,10 @@ class HabitConfigurationViewModel @Inject constructor (
     var habit by mutableStateOf<Habit?>(null)
         private set
 
-    var name by mutableStateOf("")
+    var name by mutableStateOf(stringResourcesProvider.getString(R.string.habit_configuration_default_name))
         private set
 
-    var selectedIcon by mutableStateOf("😊")
+    var selectedIcon by mutableStateOf(stringResourcesProvider.getString(R.string.habit_configuration_default_icon))
         private set
 
     var expandedIcon by mutableStateOf(false)
@@ -61,7 +65,7 @@ class HabitConfigurationViewModel @Inject constructor (
     var selectedGoalAmount by mutableIntStateOf(0)
         private set
 
-    var selectedUnitType by mutableStateOf("km")
+    var selectedUnitType by mutableStateOf(stringResourcesProvider.getString(R.string.habit_configuration_default_unit_type))
         private set
 
     var selectedUnitTypeIndex by mutableIntStateOf(0)
@@ -73,8 +77,8 @@ class HabitConfigurationViewModel @Inject constructor (
 
 
     var unitTypeOptions = mutableListOf<ListOption>(
-        ListOption(titleText = "km", selected = true),
-        ListOption(titleText = "hours")
+        ListOption(titleText = stringResourcesProvider.getString(R.string.habit_configuration_first_unit_type), selected = true),
+        ListOption(titleText = stringResourcesProvider.getString(R.string.habit_configuration_second_unit_type))
     )
 
 
@@ -92,7 +96,6 @@ class HabitConfigurationViewModel @Inject constructor (
                     habitType = habit.habitType
                     selectedGoalAmount = habit.goalAmount
                     selectedUnitType = habit.unitType
-                    //more will be added later
                     this@HabitConfigurationViewModel.habit = habit
                 }
             }
@@ -129,21 +132,27 @@ class HabitConfigurationViewModel @Inject constructor (
             }
             is HabitConfigurationEvent.DeleteHabit -> {
                 viewModelScope.launch {
+                    if(habit == null){
+                        _uiEvent.send(UiEvent.ShowSnackbar(
+                            message = stringResourcesProvider.getString(R.string.scaffold_delete_error)
+                        ))
+                        return@launch
+                    } else {
+                        val startDate: LocalDate = habit?.endDate!!
+                        val endDate: LocalDate = selectedEndDate!!
+                        var currentDate: LocalDate = startDate
 
-                    val startDate: LocalDate = habit?.endDate!!
-                    val endDate: LocalDate = selectedEndDate!!
-                    var currentDate: LocalDate = startDate
 
+                        while (currentDate <= endDate) {
+                            val collectedHabitProgress = repository.getHabitDateProgress(habit?.id!!, currentDate)
+                            repository.deleteHabitProgress(habitProgress = collectedHabitProgress!!)
+                            currentDate = currentDate.plusDays(1)
+                        }
 
-                    while (currentDate <= endDate) {
-                        val collectedHabitProgress = repository.getHabitDateProgress(habit?.id!!, currentDate)
-                        repository.deleteHabitProgress(habitProgress = collectedHabitProgress!!)
-                        currentDate = currentDate.plusDays(1)
+                        repository.deleteHabit(habit!!)
+
+                        _uiEvent.send(UiEvent.PopBack)
                     }
-
-                    repository.deleteHabit(habit!!)
-
-                    _uiEvent.send(UiEvent.PopBack)
                 }
 
             }
@@ -153,24 +162,24 @@ class HabitConfigurationViewModel @Inject constructor (
 
                     if (name.isEmpty()){
                     _uiEvent.send(UiEvent.ShowSnackbar(
-                        message = "Name can't be empty"
+                        message = stringResourcesProvider.getString(R.string.scaffold_name_error)
                     ))
                         return@launch
                     } else if (selectedStartDate!! > selectedEndDate){
                         _uiEvent.send(UiEvent.ShowSnackbar(
-                            message = "Start date can't be after End date"
+                            message = stringResourcesProvider.getString(R.string.scaffold_date_error)
                         ))
                         return@launch
                     } else if(selectedGoalAmount == 0){
                         _uiEvent.send(UiEvent.ShowSnackbar(
-                            message = "Goal amount can't be 0"
+                            message = stringResourcesProvider.getString(R.string.goal_and_unit_error)
                         ))
                         return@launch
 
                     } else {
 
                         if(habit == null){
-                            //tak netreba nic menit
+
 
                             val rowId = repository.insertHabit(
                                 Habit(
@@ -207,11 +216,10 @@ class HabitConfigurationViewModel @Inject constructor (
 
                             var dataInFutureNeedChanges = false
                             var differenceAmount:Int = 0
-                            //musime updatnut progress
-                            //zoberem si vsetky habitProgressions
+
                             if(habit?.startDate!! > selectedStartDate){
 
-                                //tak musime pridat na dane miesta nove entries
+
                                 val startDate: LocalDate = selectedStartDate!!
                                 val endDate: LocalDate = habit?.startDate!!
                                 var currentDate: LocalDate = startDate
@@ -229,7 +237,7 @@ class HabitConfigurationViewModel @Inject constructor (
                                 }
 
                             } else if (habit?.startDate!! < selectedStartDate){
-                                //musime si zapamatat o kolko mame znizit progress pre vsetky dni ktore su za tymto dnom
+
 
                                 val startDate: LocalDate = habit?.startDate!!
                                 val endDate: LocalDate = selectedStartDate!!
@@ -297,17 +305,6 @@ class HabitConfigurationViewModel @Inject constructor (
 
                             if(dataInFutureNeedChanges){
 
-                                //val newStartDate: LocalDate = selectedStartDate!!
-                                //val newStartDateProgress = repository.getHabitDateProgress(habit?.id!!, newStartDate)
-
-                                //val differenceAmount = newStartDateProgress?.progressToDate!!
-
-
-                                //pozrem sa ci musim vymazat nejake data z endu
-
-                                //ideme dole
-
-                                //musime len vymazavat
 
                                 val startDate: LocalDate = selectedStartDate!!
                                 val endDate: LocalDate = selectedEndDate!!
@@ -358,7 +355,7 @@ class HabitConfigurationViewModel @Inject constructor (
 
 
                             }
-                            //musime sa pozriet ci ideme s endDate hore alebo dole
+
 
                             repository.insertHabit(
                                 Habit(
@@ -393,6 +390,7 @@ class HabitConfigurationViewModel @Inject constructor (
             is HabitConfigurationEvent.ChangeUnitType -> {
                 updateSelectedElementInListOfOptions(unitTypeOptions ,selectedUnitTypeIndex, false)
                 selectedUnitTypeIndex = event.index
+                selectedUnitType = UnitType.entries.find { it.value == selectedUnitTypeIndex }?.toString() ?: ""
                 updateSelectedElementInListOfOptions(unitTypeOptions, selectedUnitTypeIndex, true)
             }
 
@@ -403,6 +401,6 @@ class HabitConfigurationViewModel @Inject constructor (
 }
 
 enum class UnitType(var value: Int) {
-    Km(0),
-    Hours(1)
+    km(0),
+    hours(1)
 }

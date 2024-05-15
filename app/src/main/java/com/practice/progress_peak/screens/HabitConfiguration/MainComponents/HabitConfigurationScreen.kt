@@ -14,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.maxkeppeker.sheets.core.icons.LibIcons
 import com.maxkeppeker.sheets.core.models.base.UseCaseState
@@ -27,6 +28,7 @@ import com.maxkeppeler.sheets.emoji.models.EmojiConfig
 import com.maxkeppeler.sheets.emoji.models.EmojiSelection
 import com.maxkeppeler.sheets.list.ListDialog
 import com.maxkeppeler.sheets.list.models.ListSelection
+import com.practice.progress_peak.R
 import com.practice.progress_peak.screens.HabitConfiguration.ScaffoldBars.BottomBarHabitConfiguration
 import com.practice.progress_peak.screens.HabitConfiguration.OtherComponents.DateRow
 import com.practice.progress_peak.screens.HabitConfiguration.OtherComponents.GoalAndUnitTypeRow
@@ -39,7 +41,8 @@ import com.practice.progress_peak.utils.getStringNameFromListOfOptions
 import kotlinx.coroutines.launch
 
 
-
+//Spôsob inicializácie okien pomocou Dagger Hilt dependency injection knižnice som robil na základe
+//tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ&t=3102s
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitConfigurationScreen(
@@ -154,7 +157,7 @@ fun HabitConfigurationScreen(
                 onButtonClick = {
                     viewModel.onEvent(HabitConfigurationEvent.ExpandStartDate(true))
                 },
-                nameText = "Start date"
+                nameText = stringResource(R.string.date_row_start)
             )
 
             DateRow(
@@ -162,7 +165,7 @@ fun HabitConfigurationScreen(
                 onButtonClick = {
                     viewModel.onEvent(HabitConfigurationEvent.ExpandEndDate(true))
                 },
-                nameText = "End date"
+                nameText = stringResource(R.string.date_row_end)
             )
 
             if(viewModel.expandEndDate){

@@ -4,6 +4,7 @@ import com.practice.progress_peak.data.Database.DatabaseTables.Habit
 import com.practice.progress_peak.data.Database.DatabaseTables.HabitProgression
 import java.time.LocalDate
 
+//Nápad pre vytvorenie triedy Event som čerpal z tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ&t=3102s
 sealed class MainHabitListEvent {
     data class DeleteHabit(val habit: Habit) : MainHabitListEvent()
     data class EditHabit(val habit: Habit) : MainHabitListEvent()

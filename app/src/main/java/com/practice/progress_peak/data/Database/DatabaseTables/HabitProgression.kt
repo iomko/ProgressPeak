@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDate
 
+//Spôsob vytvárania tabuľky bol navrhnutý spôsobom ako na video tutoriále: https://www.youtube.com/watch?v=A7CGcFjQQtQ&t=3102s
 @Entity
 data class HabitProgression(
     val date: LocalDate? = LocalDate.now(),

@@ -10,8 +10,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.practice.progress_peak.R
 
 @Composable
 fun BottomBarHabitConfiguration(
@@ -28,32 +30,32 @@ fun BottomBarHabitConfiguration(
         ) {
             Button(
                 onClick = { onClickAddHabit() },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.green)),
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp)
             ) {
-                Text(text = "Apply", color = Color.White)
+                Text(text = stringResource(R.string.habit_configuration_apply), color = colorResource(R.color.white))
             }
             Button(
                 onClick = { onClickCancelHabit() },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.dark_gray)),
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp)
             ) {
-                Text(text = "Cancel", color = Color.White)
+                Text(text = stringResource(R.string.habit_configuration_cancel), color = colorResource(R.color.white))
             }
         }
 
         Button(
             onClick = { onClickDeleteHabit() },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+            colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.red)),
             modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 4.dp)
                 .fillMaxWidth()
         ) {
-            Text(text = "Delete", color = Color.White)
+            Text(text = stringResource(R.string.habit_configuration_delete), color = colorResource(R.color.white))
         }
     }
 

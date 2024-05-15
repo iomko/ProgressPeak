@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.practice.progress_peak.R
 
 @Composable
 fun GoalAndUnitTypeRow(
@@ -25,7 +27,7 @@ fun GoalAndUnitTypeRow(
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    GeneralTextWithContent(text = "Goal and Unit type:") {
+    GeneralTextWithContent(text = stringResource(R.string.goal_and_unit)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {

@@ -18,6 +18,8 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
+//Spôsob vytvárania ViewModelov som robil na základe
+//tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ&t=3102s
 @HiltViewModel
 class HabitProgressViewModel @Inject constructor (
     private val repository: ProgressPeakRepository,

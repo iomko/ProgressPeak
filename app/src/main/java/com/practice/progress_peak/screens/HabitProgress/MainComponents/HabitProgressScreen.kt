@@ -16,15 +16,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.practice.progress_peak.R
 import com.practice.progress_peak.screens.HabitProgress.OtherComponents.CircularProgressBar
 import com.practice.progress_peak.screens.HabitProgress.OtherComponents.ProgressUpdatorBar
 import com.practice.progress_peak.screens.HabitProgress.ScaffoldBars.BottomBarHabitProgress
 import com.practice.progress_peak.screens.HabitProgress.ScaffoldBars.TopBarHabitProgress
 import com.practice.progress_peak.utils.UiEvent
 
+//Spôsob inicializácie okien pomocou Dagger Hilt dependency injection knižnice som robil na základe
+//tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ&t=3102s
 @Composable
 fun HabitProgressScreen(
     popBack: () -> Unit,
@@ -62,12 +65,12 @@ fun HabitProgressScreen(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // CircularProgressBar
+
                 CircularProgressBar(
                     modifier = Modifier.padding(16.dp),
                     maxValue = viewModel.habitProgressionGoal,
                     currentAmount = viewModel.habitProgressionAmount,
-                    progressColor = Color.Blue,
+                    progressColor = colorResource(R.color.dark_blue),
                     strokeWidth = 12.dp,
                     size = 200.dp,
                     textSize = 24f

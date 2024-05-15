@@ -12,8 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.practice.progress_peak.R
 
 @Composable
 fun TopBarHabitProgress(
@@ -29,13 +31,13 @@ fun TopBarHabitProgress(
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1f)
-                .background(color = Color(255, 165, 0))
+                .background(color = colorResource(R.color.orange))
                 .padding(vertical = 16.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Habit progress",
-                color = Color.Black,
+                text = stringResource(R.string.habit_progress_top_bar),
+                color = colorResource(R.color.black),
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
         }
@@ -44,13 +46,13 @@ fun TopBarHabitProgress(
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1f)
-                .background(color = Color.LightGray)
+                .background(color = colorResource(R.color.light_gray))
                 .padding(vertical = 16.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = habitName,
-                color = Color.Black,
+                color = colorResource(R.color.black),
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
         }

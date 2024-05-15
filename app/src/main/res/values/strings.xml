@@ -3,9 +3,47 @@
 
     //MainScreenStrings
     <string name="good_habits">Good Habits</string>
-    <string name="bad_habits">Good Habits</string>
+    <string name="bad_habits">Bad Habits</string>
     <string name="filter_sorting">Sort by</string>
     <string name="filter_ordering">Ordering</string>
-    stringResource(R.string.sort_by)
+    <string name="first_sorting_option">Name</string>
+    <string name="second_sorting_option">Completion</string>
+    <string name="first_ordering_option">Ascending</string>
+    <string name="second_ordering_option">Descending</string>
+
+    //StatisticsScreenStrings
+    <string name="statistics_screen_bar">Statistics</string>
+    <string name="average_day_progress_bar">Daily Average Progress</string>
+    <string name="maximum_progress_bar">Maximum Progress in Day</string>
+    <string name="active_days_bar">Active Days Count</string>
+    <string name="total_progress_bar">Total Progress</string>
+
+    //HabitProgressScreenStrings
+    <string name="habit_progress_top_bar">Habit progress</string>
+    <string name="habit_progress_modification_done">Done</string>
+
+    //HabitConfigurationScreenStrings
+    <string name="habit_configuration_top_bar">Habit Configuration</string>
+    <string name="habit_configuration_apply">Apply</string>
+    <string name="habit_configuration_cancel">Cancel</string>
+    <string name="habit_configuration_delete">Delete</string>
+    <string name="name_row_placeholder">Enter name</string>
+    <string name="name_row_text">Name:</string>
+    <string name="icon_row_text">Icon:</string>
+    <string name="habit_type_text">Habit type:</string>
+    <string name="good_habit_type">Good habit</string>
+    <string name="bad_habit_type">Bad habit</string>
+    <string name="goal_and_unit">Goal and Unit type:</string>
+    <string name="habit_configuration_default_name"/>
+    <string name="habit_configuration_default_icon">😊</string>
+    <string name="habit_configuration_default_unit_type">km</string>
+    <string name="habit_configuration_first_unit_type">km</string>
+    <string name="habit_configuration_second_unit_type">hours</string>
+    <string name="scaffold_name_error">Name can\'t be empty</string>
+    <string name="scaffold_date_error">Start date can\'t be after End date</string>
+    <string name="goal_and_unit_error">Goal amount can\'t be 0</string>
+    <string name="scaffold_delete_error">Can\'t delete non-existing habit</string>
+    <string name="date_row_start">Start date</string>
+    <string name="date_row_end">End date</string>
 
 </resources>

@@ -3,6 +3,7 @@ package com.practice.progress_peak.screens.HabitConfiguration.MainComponents
 import com.practice.progress_peak.screens.MainHabitList.MainComponents.HabitType
 import java.time.LocalDate
 
+//Nápad pre vytvorenie triedy Event som čerpal z tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ&t=3102s
 sealed class HabitConfigurationEvent {
     data class ChangeName(val name: String): HabitConfigurationEvent()
 

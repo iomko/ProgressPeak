@@ -11,6 +11,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+
+//Spôsob vytvárania a poskytovania databázy aplikácii bolo vytvorené za pomoci video tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ&t=3102s
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {

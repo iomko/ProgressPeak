@@ -1,5 +1,6 @@
 package com.practice.progress_peak.screens.MainHabitList.MainComponents
 
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -7,10 +8,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maxkeppeler.sheets.list.models.ListOption
+import com.practice.progress_peak.R
 import com.practice.progress_peak.data.Database.DatabaseTables.Habit
 import com.practice.progress_peak.data.Database.DatabaseTables.HabitProgression
 import com.practice.progress_peak.data.Database.Dao.ProgressPeakRepository
 import com.practice.progress_peak.utils.Routes
+import com.practice.progress_peak.utils.StringResourcesProvider
 import com.practice.progress_peak.utils.UiEvent
 import com.practice.progress_peak.utils.updateSelectedElementInListOfOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,8 +27,12 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
+
+//Spôsob vytvárania ViewModelov som robil na základe
+//tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ&t=3102s
 @HiltViewModel
 class MainHabitListViewModel @Inject constructor(
+    private val stringResourcesProvider: StringResourcesProvider,
     private val repository: ProgressPeakRepository
 ): ViewModel() {
 
@@ -54,13 +61,13 @@ class MainHabitListViewModel @Inject constructor(
         private set
 
     var sortListOptions = mutableListOf<ListOption>(
-        ListOption(titleText = "Name", selected = true),
-        ListOption(titleText = "Completion")
+        ListOption(titleText = stringResourcesProvider.getString(R.string.first_sorting_option), selected = true),
+        ListOption(titleText = stringResourcesProvider.getString(R.string.second_sorting_option))
     )
 
     val orderingListOptions = mutableListOf<ListOption>(
-        ListOption(titleText = "Ascending", selected = true),
-        ListOption(titleText = "Descending")
+        ListOption(titleText = stringResourcesProvider.getString(R.string.first_ordering_option), selected = true),
+        ListOption(titleText = stringResourcesProvider.getString(R.string.second_ordering_option))
     )
 
     private val _habits = MutableStateFlow<List<Pair<Habit, HabitProgression>>>(emptyList())
@@ -105,7 +112,6 @@ class MainHabitListViewModel @Inject constructor(
 
             is MainHabitListEvent.GoToNextWeek -> {
                 viewModelScope.launch {
-                    //habits = repository.getHabitsByDate(currentDate)
                     currentDate = currentDate.plusWeeks(1)
                 }
             }

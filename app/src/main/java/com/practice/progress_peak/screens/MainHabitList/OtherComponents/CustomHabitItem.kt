@@ -22,10 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.practice.progress_peak.R
 import com.practice.progress_peak.data.Database.DatabaseTables.Habit
 import com.practice.progress_peak.data.Database.DatabaseTables.HabitProgression
 
@@ -41,7 +43,7 @@ fun CustomHabitItem(
             .fillMaxWidth()
             .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.LightGray)
+            .background(colorResource(R.color.light_gray))
             .clickable { onHabitClick() }
     ) {
         Column(
@@ -59,21 +61,24 @@ fun CustomHabitItem(
                         text = habit.icon,
                         fontSize = 24.sp,
                         modifier = Modifier
-                            .align(Alignment.Center)
+                            .align(Alignment.Center),
+                        color = colorResource(R.color.black)
                     )
                 }
                 Text(
                     text = habit.name,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(top = 5.dp)
+                        .padding(top = 5.dp),
+                    color = colorResource(R.color.black)
                 )
                 Text(
-                    text = habitProgression.progressToDate.toString(),
+                    text = "${habitProgression.progressToDate}/${habit.goalAmount} ${habit.unitType}",
                     modifier = Modifier
                         .widthIn(44.dp)
                         .padding(end = 10.dp),
-                    textAlign = TextAlign.End
+                    textAlign = TextAlign.End,
+                    color = colorResource(R.color.black)
                 )
             }
             Row(
@@ -87,7 +92,8 @@ fun CustomHabitItem(
                     modifier = Modifier
                         .size(40.dp)
                         .padding(5.dp)
-                        .clickable { onSettingsClick() }
+                        .clickable { onSettingsClick() },
+                    tint = colorResource(id = R.color.black)
                 )
 
                 RectangularProgressBar(
@@ -96,8 +102,8 @@ fun CustomHabitItem(
                         .padding(end = 5.dp),
                     maxInt = habit.goalAmount,
                     currentInt = habitProgression.progressToDate,
-                    backgroundColor = Color.DarkGray,
-                    progressColor = Color.Blue,
+                    backgroundColor = colorResource(R.color.dark_gray),
+                    progressColor = colorResource(R.color.dark_blue),
                     height = 8.dp
                 )
             }
@@ -110,8 +116,8 @@ fun RectangularProgressBar(
     modifier: Modifier = Modifier,
     maxInt: Int,
     currentInt: Int,
-    backgroundColor: Color = Color.LightGray,
-    progressColor: Color = Color.Blue,
+    backgroundColor: Color = colorResource(R.color.light_gray),
+    progressColor: Color = colorResource(R.color.dark_blue),
     height: Dp = 16.dp
 ) {
     val progressFraction = currentInt.toFloat() / maxInt.toFloat()

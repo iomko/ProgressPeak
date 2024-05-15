@@ -20,6 +20,8 @@ import com.practice.progress_peak.ui.theme.Progress_PeakTheme
 import com.practice.progress_peak.utils.Routes
 import dagger.hilt.android.AndroidEntryPoint
 
+//Spôsob navigácie medzi obrazovkami, ktorý je uvedený nižšie v MainActivity
+//bol spravený za pomoci video tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +63,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(Routes.STATISTICS_SCREEN){
-                        HabitStatisticsScreen(navigate = {navController.navigate(it.route)})
+                        HabitStatisticsScreen(popBack = { navController.popBackStack() })
                     }
 
                 }

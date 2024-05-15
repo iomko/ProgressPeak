@@ -10,6 +10,8 @@ import com.practice.progress_peak.data.Database.DatabaseTables.HabitProgression
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
+//Spôsob vytvoránia funkcii pre získavanie dát z databázy bolo navrhnuté podobným spôsobom
+//pomocou video tutoriálu: https://www.youtube.com/watch?v=A7CGcFjQQtQ
 @Dao
 interface ProgressPeakDao {
 

@@ -11,8 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.practice.progress_peak.R
 import com.practice.progress_peak.screens.MainHabitList.MainComponents.HabitType
 
 @Composable
@@ -20,10 +22,10 @@ fun HabitTypeRow(
     habitType: Boolean,
     onHabitTypeSelected: (HabitType) -> Unit
 ) {
-    val selectedColor = Color(255, 165, 0)
-    val unselectedColor = Color.Transparent
+    val selectedColor = colorResource(R.color.orange)
+    val unselectedColor = colorResource(R.color.transparent)
 
-    GeneralTextWithContent(text = "Habit type:") {
+    GeneralTextWithContent(text = stringResource(R.string.habit_type_text)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -40,7 +42,7 @@ fun HabitTypeRow(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Good habit"
+                    text = stringResource(R.string.good_habit_type)
                 )
             }
 
@@ -56,7 +58,7 @@ fun HabitTypeRow(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Bad habit"
+                    text = stringResource(R.string.bad_habit_type)
                 )
             }
         }
